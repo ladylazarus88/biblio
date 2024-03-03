@@ -4,10 +4,7 @@
     <meta charset="UTF-8">
     <title>La mia biblioteca</title>
     <style>
-        <!-- Campo di ricerca -->
-        <input type="text" id="campoRicerca" onkeyup="filtraLibri()" placeholder="Cerca per autore o titolo...">
-
-        .book-container {
+            .book-container {
             background-color: #fff;
             border: 1px solid #ddd;
             padding: 10px;
@@ -48,6 +45,8 @@
 <body>
     <div class="header-image"></div>
     <h1>Benvenuti nella mia biblioteca</h1>
+    <!-- Campo di ricerca -->
+    <input type="text" id="campoRicerca" onkeyup="filtraLibri()" placeholder="Cerca per autore o titolo...">
     <!-- Contenitore per tutti i libri -->
     <div id="books-container"></div>
    
@@ -96,31 +95,26 @@
             })
             .catch(error => console.error('Errore nel caricamento del catalogo:', error));
     }
+  function filtraLibri() {
+        var input, filtro, contenitore, libri, titolo, autore, i;
+        input = document.getElementById('campoRicerca');
+        filtro = input.value.toUpperCase();
+        contenitore = document.getElementById('books-container');
+        libri = contenitore.getElementsByClassName('book-container');
 
-    // Chiamata alla funzione al caricamento della pagina
-    document.addEventListener('DOMContentLoaded', CaricaCatalogo);
-
-        function filtraLibri() {
-    var input, filtro, contenitore, libri, titolo, autore, i;
-    input = document.getElementById('campoRicerca');
-    filtro = input.value.toUpperCase();
-    contenitore = document.getElementById('books-container');
-    libri = contenitore.getElementsByClassName('book-container');
-
-    // Loop attraverso tutti i contenitori dei libri e nascondi quelli che non corrispondono alla query di ricerca
-    for (i = 0; i < libri.length; i++) {
-        titolo = libri[i].getElementsByTagName("h2")[0];
-        autore = libri[i].getElementsByTagName("p")[0];
-        if (titolo || autore) {
+        for (i = 0; i < libri.length; i++) {
+            titolo = libri[i].getElementsByTagName("h2")[0];
+            autore = libri[i].getElementsByTagName("p")[0];
             if (titolo.innerHTML.toUpperCase().indexOf(filtro) > -1 || autore.innerHTML.toUpperCase().indexOf(filtro) > -1) {
                 libri[i].style.display = "";
             } else {
                 libri[i].style.display = "none";
-                    }
             }
         }
     }
 
+    // Chiamata alla funzione al caricamento della pagina
+    document.addEventListener('DOMContentLoaded', CaricaCatalogo);
     </script>
 </body>
 </html>
