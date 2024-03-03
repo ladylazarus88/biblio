@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>La mia biblioteca</title>
+    <style>
+        /* Stili esistenti */
+        /* ... */
+        
+        /* Stile per i contenitori dei libri */
+        .book-container {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        
+       .header-image {
+           width: 100%;
+           height: 200px;
+           background: url('https://www.gedistatic.it/content/gedi/img/huffingtonpost/2020/05/06/092141828-6d8b7944-eed5-4bf5-a7c5-2e3c8b17879d.jpeg?webp') no-repeat center center;
+           background-size: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-image"></div>
+    <h1>Benvenuti nella mia biblioteca</h1>
+    <!-- Contenitore per tutti i libri -->
+    <div id="books-container"></div>
+   
+    <script>
+    function CaricaCatalogo() {
+        var url = "http://localhost:8000/books.csv"; // Percorso del file CSV sul server locale
+
+        fetch(url)
+            .then(response => response.text())
+            .then(data => {
+                var libri = data.split(/\r?\n/); // Divide il file CSV in righe
+                var booksContainer = document.getElementById('books-container');
+                booksContainer.innerHTML = ''; // Pulisce il contenitore dei libri
+
+                libri.forEach(function (libro, index) {
+                    if (index === 0) return; // Salta l'intestazione del CSV
+                    var dettagliLibro = libro.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); // Divide ogni riga in colonne, gestendo le virgolette
+                    
+                    // Crea un contenitore per ogni libro
+                    var bookContainer = document.createElement('div');
+                    bookContainer.classList.add('book-container');
+
+                    // Estrai i dettagli del libro tenendo conto delle virgolette
+                    var isbn = dettagliLibro[0];
+                    var copertina = dettagliLibro[1] || 'default-cover.jpg'; // Immagine di copertina predefinita se mancante
+                    var titolo = dettagliLibro[2].replace(/"/g, ''); // Rimuove le virgolette dal titolo
+                    var autore = dettagliLibro[3].replace(/"/g, ''); // Rimuove le virgolette dall'autore
+                    var categoria = dettagliLibro[4].replace(/"/g, ''); // Rimuove le virgolette dalla categoria
+                    var dataPubblicazione = dettagliLibro[5].replace(/"/g, ''); // Rimuove le virgolette dalla data di pubblicazione
+
+                    // Formatta la data di pubblicazione per rimuovere l'ora se presente
+                    dataPubblicazione = dataPubblicazione.split('T')[0];
+
+                    // Aggiunge i dettagli del libro al contenitore
+                    bookContainer.innerHTML = `
+                        <h2>${titolo}</h2>
+                        <p>Autore: ${autore}</p>
+                        <p>Categoria: ${categoria}</p>
+                        <p>Data di Pubblicazione: ${dataPubblicazione}</p>
+                        <img src="${copertina}" alt="Copertina del libro: ${titolo}" />
+                    `;
+
+                    // Aggiunge il contenitore del libro al contenitore principale
+                    booksContainer.appendChild(bookContainer);
+                });
+            })
+            .catch(error => console.error('Errore nel caricamento del catalogo:', error));
+    }
+
+    // Chiamata alla funzione al caricamento della pagina
+    document.addEventListener('DOMContentLoaded', CaricaCatalogo);
+    </script>
+</body>
+</html>
+
