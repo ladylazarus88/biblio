@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <title>La mia biblioteca</title>
     <style>
+        <!-- Campo di ricerca -->
+        <input type="text" id="campoRicerca" onkeyup="filtraLibri()" placeholder="Cerca per autore o titolo...">
+
         .book-container {
             background-color: #fff;
             border: 1px solid #ddd;
@@ -96,6 +99,28 @@
 
     // Chiamata alla funzione al caricamento della pagina
     document.addEventListener('DOMContentLoaded', CaricaCatalogo);
+
+        function filtraLibri() {
+    var input, filtro, contenitore, libri, titolo, autore, i;
+    input = document.getElementById('campoRicerca');
+    filtro = input.value.toUpperCase();
+    contenitore = document.getElementById('books-container');
+    libri = contenitore.getElementsByClassName('book-container');
+
+    // Loop attraverso tutti i contenitori dei libri e nascondi quelli che non corrispondono alla query di ricerca
+    for (i = 0; i < libri.length; i++) {
+        titolo = libri[i].getElementsByTagName("h2")[0];
+        autore = libri[i].getElementsByTagName("p")[0];
+        if (titolo || autore) {
+            if (titolo.innerHTML.toUpperCase().indexOf(filtro) > -1 || autore.innerHTML.toUpperCase().indexOf(filtro) > -1) {
+                libri[i].style.display = "";
+            } else {
+                libri[i].style.display = "none";
+                    }
+            }
+        }
+    }
+
     </script>
 </body>
 </html>
