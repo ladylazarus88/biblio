@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <title>La mia biblioteca</title>
     <style>
+          
+        .header-image {
+           width: 100%;
+           height: 200px;
+           background: url('https://www.gedistatic.it/content/gedi/img/huffingtonpost/2020/05/06/092141828-6d8b7944-eed5-4bf5-a7c5-2e3c8b17879d.jpeg?webp') no-repeat center center;
+           background-size: cover;
+        }
+        
         #campoRicerca {
             width: 30%; /* Imposta la larghezza al 100% del contenitore */
             padding: 10px; /* Aggiunge un po' di spazio interno per rendere il campo più grande */
@@ -17,12 +25,14 @@
             padding: 10px;
             margin-bottom: 10px;
         }
+
+        .book-description {
+            flex-basis: 50%;
+            padding-left: 20px;
+        }
         
-       .header-image {
-           width: 100%;
-           height: 200px;
-           background: url('https://www.gedistatic.it/content/gedi/img/huffingtonpost/2020/05/06/092141828-6d8b7944-eed5-4bf5-a7c5-2e3c8b17879d.jpeg?webp') no-repeat center center;
-           background-size: cover;
+        .book-info {
+            flex-basis: 50%;
         }
    
         body {
@@ -83,6 +93,7 @@
                     var autore = dettagliLibro[3].replace(/"/g, ''); // Rimuove le virgolette dall'autore
                     var categoria = dettagliLibro[4].replace(/"/g, ''); // Rimuove le virgolette dalla categoria
                     var dataPubblicazione = dettagliLibro[5].replace(/"/g, ''); // Rimuove le virgolette dalla data di pubblicazione
+                    var descrizione = dettagliLibro[6].replace(/"/g, ''); 
 
                     // Formatta la data di pubblicazione per rimuovere l'ora se presente
                     dataPubblicazione = dataPubblicazione.split('T')[0];
@@ -98,7 +109,31 @@
 
                     // Aggiunge il contenitore del libro al contenitore principale
                     booksContainer.appendChild(bookContainer);
-                });
+
+                    // Crea un contenitore per i dettagli del libro
+                    var bookDetails = document.createElement('div');
+                    bookDetails.classList.add('book-details');
+            
+                    // Crea un contenitore per le informazioni del libro
+                    var bookInfo = document.createElement('div');
+                    bookInfo.classList.add('book-info');
+
+                     // Crea un contenitore per la descrizione del libro
+                    var bookDescription = document.createElement('div');
+                    bookDescription.classList.add('book-description');
+                    bookDescription.textContent = descrizione; // Aggiungi la descrizione del libro
+            
+                    // Aggiungi bookInfo e bookDescription a bookDetails
+                    bookDetails.appendChild(bookInfo);
+                    bookDetails.appendChild(bookDescription);
+            
+                    // Aggiungi bookDetails a bookContainer
+                    bookContainer.appendChild(bookDetails);
+            
+                    // Aggiungi bookContainer a booksContainer
+                    booksContainer.appendChild(bookContainer);
+    
+                        });
             })
             .catch(error => console.error('Errore nel caricamento del catalogo:', error));
     }
