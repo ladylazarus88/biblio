@@ -33,6 +33,8 @@
         .book-info {
             flex-basis: 50%;
             align-self: flex-start;
+            display: flex; /* Aggiungi questa proprietà per definire un flex container */
+            flex-direction: column; /* Imposta la direzione degli elementi figli in colonna */
         }
 
         .book-description {
@@ -101,7 +103,7 @@
                     // Aggiunge i dettagli del libro al contenitore
                     bookContainer.innerHTML = `
                         <h2>${titolo}</h2>
-                        <h3>Autore: ${autore}</h3>
+                        <p>Autore: ${autore}</p>
                         <p>Categoria: ${categoria}</p>
                         <p>Data di Pubblicazione: ${dataPubblicazione}</p>
                         <img src="${copertina}" alt="Copertina del libro: ${titolo}" />
