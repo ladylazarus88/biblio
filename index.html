@@ -19,7 +19,7 @@
             margin-bottom: 20px; /* Aggiunge spazio sotto il campo di ricerca */
         }
         
-        .book-container {
+      .book-container {
             display: flex;
             background-color: #fff;
             border: 1px solid #ddd;
@@ -30,32 +30,38 @@
             border-radius: 5px; 
         }
 
-        .book-info {
-            flex-basis: 50%;
-            align-self: flex-start;
-            display: flex; /* Aggiungi questa proprietà per definire un flex container */
-            flex-direction: column; /* Imposta la direzione degli elementi figli in colonna */
+      .book-cover {
+            flex-basis: 30%; /* Aggiustare secondo necessità */
+            align-self: center;
+            padding-right: 20px; /* Distanza dalla colonna centrale */
         }
 
-        .book-description {
-            flex-basis: 50%;
-            padding-left: 20px;
-            align-self: flex-start;
+      .book-info {
+            flex-basis: 40%; /* Aggiustare secondo necessità */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
-   
-        body {
+
+      .book-description {
+            flex-basis: 30%; /* Aggiustare secondo necessità */
+            padding-left: 20px;
+            align-self: center;
+        }
+
+      body {
         font-family: 'URW Gothic L', sans-serif;
         color: #333;
         background-color: #f8f8f8;
         }
 
-        h1 {
+      h1 {
             color: #5D6975;
             font-family: 'Georgia', serif;
             text-align: center;
         }
 
-        .book-container:hover {
+      .book-container:hover {
             box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
         }
         
@@ -76,70 +82,56 @@
         fetch(url)
             .then(response => response.text())
             .then(data => {
-                var libri = data.split(/\r?\n/); // Divide il file CSV in righe
+                var libri = data.split(/\r?\n/);
                 var booksContainer = document.getElementById('books-container');
-                booksContainer.innerHTML = ''; // Pulisce il contenitore dei libri
-
+                booksContainer.innerHTML = '';
+            
                 libri.forEach(function (libro, index) {
-                    if (index === 0) return; // Salta l'intestazione del CSV
-                    var dettagliLibro = libro.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); // Divide ogni riga in colonne, gestendo le virgolette
-                    
-                    // Crea un contenitore per ogni libro
-                    var bookContainer = document.createElement('div');
-                    bookContainer.classList.add('book-container');
+                    if (index === 0) return;
+                    var dettagliLibro = libro.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
 
-                    // Estrai i dettagli del libro tenendo conto delle virgolette
-                    var isbn = dettagliLibro[0];
-                    var copertina = dettagliLibro[1] || 'default-cover.jpg'; // Immagine di copertina predefinita se mancante
-                    var titolo = dettagliLibro[2].replace(/"/g, ''); // Rimuove le virgolette dal titolo
-                    var autore = dettagliLibro[3].replace(/"/g, ''); // Rimuove le virgolette dall'autore
-                    var categoria = dettagliLibro[4].replace(/"/g, ''); // Rimuove le virgolette dalla categoria
-                    var dataPubblicazione = dettagliLibro[5].replace(/"/g, ''); // Rimuove le virgolette dalla data di pubblicazione
-                    var descrizione = dettagliLibro[6].replace(/"/g, ''); 
+                // Crea un contenitore per ogni libro
+                var bookContainer = document.createElement('div');
+                bookContainer.classList.add('book-container');
+               
+                // Crea un contenitore per la copertina del libro
+                var bookCover = document.createElement('div');
+                bookCover.classList.add('book-cover');
+                var copertina = dettagliLibro[1] || 'default-cover.jpg';
+                bookCover.innerHTML = `<img src="${copertina}" alt="Copertina del libro" style="width:100%;">`;
 
-                    // Formatta la data di pubblicazione per rimuovere l'ora se presente
-                    dataPubblicazione = dataPubblicazione.split('T')[0];
+                // Crea un contenitore per le informazioni del libro
+                var bookInfo = document.createElement('div');
+                bookInfo.classList.add('book-info');
+                var titolo = dettagliLibro[2].replace(/"/g, ''); // Rimuove le virgolette
+                var autore = dettagliLibro[3].replace(/"/g, '');
+                var categoria = dettagliLibro[4].replace(/"/g, '');
+                var dataPubblicazione = dettagliLibro[5].replace(/"/g, '').split('T')[0];
+                bookInfo.innerHTML = `
+                    <h2>${titolo}</h2>
+                    <p>Autore: ${autore}</p>
+                    <p>Categoria: ${categoria}</p>
+                    <p>Data di Pubblicazione: ${dataPubblicazione}</p>
+                `;
 
-                    // Aggiunge i dettagli del libro al contenitore
-                    bookContainer.innerHTML = `
-                        <h2>${titolo}</h2>
-                        <p>Autore: ${autore}</p>
-                        <p>Categoria: ${categoria}</p>
-                        <p>Data di Pubblicazione: ${dataPubblicazione}</p>
-                        <img src="${copertina}" alt="Copertina del libro: ${titolo}" />
-                    `;
+                // Crea un contenitore per la descrizione del libro  
+                var bookDescription = document.createElement('div');
+                bookDescription.classList.add('book-description');
+                var descrizione = dettagliLibro[6].replace(/"/g, '');
+                bookDescription.textContent = descrizione;
 
-                    // Aggiunge il contenitore del libro al contenitore principale
-                    booksContainer.appendChild(bookContainer);
+                bookContainer.appendChild(bookCover);
+                bookContainer.appendChild(bookInfo);
+                bookContainer.appendChild(bookDescription);
 
-                    // Crea un contenitore per i dettagli del libro
-                    var bookDetails = document.createElement('div');
-                    bookDetails.classList.add('book-details');
-            
-                    // Crea un contenitore per le informazioni del libro
-                    var bookInfo = document.createElement('div');
-                    bookInfo.classList.add('book-info');
+                booksContainer.appendChild(bookContainer);
+            });
+        });
 
-                     // Crea un contenitore per la descrizione del libro
-                    var bookDescription = document.createElement('div');
-                    bookDescription.classList.add('book-description');
-                    bookDescription.textContent = descrizione; // Aggiungi la descrizione del libro
-            
-                    // Aggiungi bookInfo e bookDescription a bookDetails
-                    bookDetails.appendChild(bookInfo);
-                    bookDetails.appendChild(bookDescription);
-            
-                    // Aggiungi bookDetails a bookContainer
-                    bookContainer.appendChild(bookDetails);
-            
-                    // Aggiungi bookContainer a booksContainer
-                    booksContainer.appendChild(bookContainer);
-    
-                        });
-            })
             .catch(error => console.error('Errore nel caricamento del catalogo:', error));
-    }
-  function filtraLibri() {
+        }
+
+    function filtraLibri() {
         var input, filtro, contenitore, libri, titolo, autore, i;
         input = document.getElementById('campoRicerca');
         filtro = input.value.toUpperCase();
